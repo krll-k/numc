@@ -9,12 +9,10 @@ var cities =[
     "barnaul", "bryansk", "volgograd", "voronezh", "ekat", "izhevsk", "irkutsk", "yola", "kazan", "kirov", "krsk", "kurgan", "kursk", "lipetsk", "mgn", "chelny", "nn", "omsk", "oren", "penza", "perm", "rostov", "ryazan", "samara", "saratov", "tver", "tomsk", "tula", "tmn", "ulsk", "ufa", "cheb", "chel", "yar"
 ];
 
-// vlz nk interzet msk votkinsk dzr krd mich nsk
-// nizhneudinsk seversk sbor taishet usol ulu dimgrad
+if (/[^0-9]/.test(req.params.phone.length) == true || req.params.phone.length !== 11) {
+    res.send("error")
+} else {
     
-//var cities =["chelny"];
-
-
 let final = cities.map(city => domp(req.params.phone, city))
 
 let ff = {}
@@ -76,6 +74,7 @@ Promise.all(final)
         ff[city] = data
         return data
     }
+}
 })
 
 
@@ -83,10 +82,15 @@ app.get('/r/:phone',  function (req,  res) {
 
     const finder = new numcap();
     
-    finder.getData(req.params.phone,  function (err,  data) {
-        console.log(err,  data);
-        res.send(data.region)
-    });
+    if (req.params.phone.replace(/[^0-9]/g, '').length == 11) {
+        finder.getData(req.params.phone,  function (err,  data) {
+            console.log(err,  data);
+            res.send(data.region)
+        });
+    } else {
+        res.send("error")
+    }
+    
 })
 
 app.listen(3000)
