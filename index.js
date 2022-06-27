@@ -1,6 +1,6 @@
-const numcap = require('numcap'), 
-      fetch = require('node-fetch'), 
-      express = require('express'), 
+const numcap = require('numcap'),
+      fetch = require('node-fetch'),
+      express = require('express'),
       app = express()
 
 app.get('/:phone',  function (req,  res) {
@@ -9,10 +9,10 @@ var cities =[
     "barnaul", "bryansk", "volgograd", "voronezh", "ekat", "izhevsk", "irkutsk", "yola", "kazan", "kirov", "krsk", "kurgan", "kursk", "lipetsk", "mgn", "chelny", "nn", "omsk", "oren", "penza", "perm", "rostov", "ryazan", "samara", "saratov", "tver", "tomsk", "tula", "tmn", "ulsk", "ufa", "cheb", "chel", "yar"
 ];
 
-if (/[^0-9]/.test(req.params.phone.length) == true || req.params.phone.length !== 11) {
+if (/[^0-9]/.test(req.params.phone) == true || req.params.phone.length !== 11) {
     res.send("error")
 } else {
-    
+
 let final = cities.map(city => domp(req.params.phone, city))
 
 let ff = {}
@@ -29,24 +29,24 @@ Promise.all(final)
     })
 
     async function domp(){
-        var phone = arguments[0], 
+        var phone = arguments[0],
             city = arguments[1]
 
         var data = await fetch("https://api-profile.dom.ru/v1/unauth/contract-asterisked?contact="+phone+"&isActive=0",  {
           "headers": {
-            "accept": "application/json,  text/plain,  */*", 
+            "accept": "application/json,  text/plain,  */*",
             "accept-language": "ru-RU, ru;q=0.9, en-US;q=0.8, en;q=0.7, und;q=0.6, uk;q=0.5", 
-            "authorization": "Bearer unauth", 
-            "cache-control": "no-cache", 
-            "domain": city, 
-            "pragma": "no-cache", 
-            "sec-fetch-dest": "empty", 
-            "sec-fetch-mode": "cors", 
-            "sec-fetch-site": "same-site", 
-            "Referer": "https://"+city+".dom.ru/", 
+            "authorization": "Bearer unauth",
+            "cache-control": "no-cache",
+            "domain": city,
+            "pragma": "no-cache",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-site",
+            "Referer": "https://"+city+".dom.ru/",
             "Referrer-Policy": "strict-origin-when-cross-origin"
-          }, 
-          "body": null, 
+          },
+          "body": null,
           "method": "GET"
         }).then(function(res) {
             return res.json();
@@ -62,10 +62,9 @@ Promise.all(final)
                         let newar = []
                         for (i = 0; json.contacts.length > i; i++) {
                             newar = newar + json.contacts[i].address.split('*').join('') + " | "
-                        }                            
+                        }
                         return json.contacts.length + "! " + newar
                     }
-                
                 return json.contacts[0].address.split('*').join('')
             }
             return json.contacts.length
@@ -81,7 +80,7 @@ Promise.all(final)
 app.get('/r/:phone',  function (req,  res) {
 
     const finder = new numcap();
-    
+
     if (req.params.phone.replace(/[^0-9]/g, '').length == 11) {
         finder.getData(req.params.phone,  function (err,  data) {
             console.log(err,  data);
@@ -90,7 +89,7 @@ app.get('/r/:phone',  function (req,  res) {
     } else {
         res.send("error")
     }
-    
+
 })
 
 app.listen(3000)
